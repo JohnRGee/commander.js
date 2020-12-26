@@ -76,4 +76,3 @@ test('when boolean x implies y and -x, --no-y then y is false', () => {
   program.parse(['-x', '--no-y'], { from: 'user' });
   expect(program.opts().y).toBe(false);
 });
-

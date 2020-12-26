@@ -552,6 +552,7 @@ class Command extends EventEmitter {
     this._combineFlagAndOptionalValue = true;
     this._description = '';
     this._argsDescription = undefined;
+    this._impliedOptions = new Map();
 
     // see .configureOutput() for docs
     this._outputConfiguration = {
@@ -992,6 +993,14 @@ class Command extends EventEmitter {
       } else if (val !== null) {
         // reassign
         this._setOptionValue(name, option.negate ? false : val);
+      }
+
+      // Implies
+      if (this._impliedOptions.has(name)) {
+        const impliedValue = !option.negate;
+        this._impliedOptions.get(name).forEach((impliedOptionName) => {
+          this._setOptionValue(impliedOptionName, impliedValue);
+        });
       }
     });
 
@@ -1862,6 +1871,16 @@ class Command extends EventEmitter {
     this._name = str;
     return this;
   };
+
+  /**
+   * .implies('debug', 'trace')
+   */
+  implies(givenOption, impliedOptions) {
+    // Map of arrays. Assert that impliedOptions are boolean?
+    const oldImplied = this._impliedOptions.has(givenOption) ? this._impliedOptions.get(givenOption) : [];
+    this._impliedOptions.set(givenOption, oldImplied.concat(impliedOptions));
+    return this;
+  }
 
   /**
    * Return program help documentation.

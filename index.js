@@ -2084,21 +2084,20 @@ Expecting one of '${allowedValues.join("', '")}'`);
 };
 
 /**
- * Expose the root command.
+ * Exports
  */
 
-exports = module.exports = new Command();
-exports.program = exports; // More explicit access to global command.
+module.exports.program = new Command();
 
-/**
- * Expose classes
- */
+module.exports.Command = Command;
+module.exports.Option = Option;
+module.exports.CommanderError = CommanderError;
+module.exports.InvalidOptionArgumentError = InvalidOptionArgumentError;
+module.exports.Help = Help;
 
-exports.Command = Command;
-exports.Option = Option;
-exports.CommanderError = CommanderError;
-exports.InvalidOptionArgumentError = InvalidOptionArgumentError;
-exports.Help = Help;
+module.exports.createCommand = function createCommand(name) {
+  return new Command(name);
+};
 
 /**
  * Camel-case the given `flag`
